@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllergyGuard - Results</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Main container for displaying the results -->
+    <div class="container">
+        <!-- Header section with branding -->
+        <header>
+            <h1>AllergyGuard</h1>
+            <p>Scan Smart. Stay Safe.</p>
+        </header>
+
+        <!-- Section for displaying the extracted text and allergens -->
+        <section>
+            <h2>Extracted Text:</h2>
+            <p>{{ image_text }}</p>
+
+            <!-- Conditional block to display found allergens -->
+            {% if found_allergens %}
+                <h2 class="alert-danger">Found Allergens:</h2>
+                <div class="allergen-list">
+                    {% for allergen in found_allergens %}
+                        <span class="allergen-box">{{ allergen }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="alert-success">No allergens found in the extracted text.</p>
+            {% endif %}
+
+            <!-- Display the processed image with highlighted allergens -->
+            <h2>Processed Image:</h2>
+            <img src="{{ url_for('serve_processed_image', filename=filename) }}" alt="Processed Image" class="preview-image">
+            
+            <!-- Button to navigate back to process another image -->
+            <a href="{{ url_for('index') }}" class="btn-primary">Process Another Image</a>
+        </section>
+    </div>
+</body>
+</html>

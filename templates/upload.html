@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllergyGuard - Upload</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Main container for the upload functionality -->
+    <div class="container">
+        <!-- Header section with branding -->
+        <header>
+            <h1>AllergyGuard</h1>
+            <p>Scan Smart. Stay Safe.</p>
+        </header>
+
+        <!-- Main section for image upload -->
+        <main>
+            <h2>Upload an image of your ingredient label:</h2>
+            <!-- Form to upload image files -->
+            <form id="upload-form" action="/upload_file" method="post" enctype="multipart/form-data">
+                <input type="file" name="file" id="file" accept="image/*" onchange="previewImage(event)" required>
+                <div id="preview-container">
+                    <img id="image-preview" src="" alt="Image Preview" style="display: none;">
+                </div>
+                <button type="submit" class="btn-primary">Upload & Preview</button>
+            </form>
+
+            <!-- Conditional block to display the uploaded image -->
+            {% if image_file %}
+                <h2>Uploaded Image:</h2>
+                <img src="{{ url_for('static', filename='uploads/' + image_file) }}" alt="Uploaded Image" class="preview-image">
+                <a href="{{ url_for('process_upload', filename=image_file) }}" class="btn-secondary">Process Image</a>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- JavaScript to preview selected image before uploading -->
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('image-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllergyGuard - Home</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Main container for the homepage content -->
+    <div class="container">
+        <!-- Header section with branding -->
+        <header>
+            <h1>AllergyGuard</h1>
+            <p>Scan Smart. Stay Safe.</p>
+        </header>
+
+        <!-- Main content section -->
+        <main>
+            <h2>Choose your input method:</h2>
+            <!-- Buttons for selecting image input options -->
+            <a href="{{ url_for('upload_page') }}" class="btn-primary">Upload Image</a>
+            <a href="{{ url_for('capture_page') }}" class="btn-secondary">Use Camera</a>
+
+            <h2>Manage Allergens:</h2>
+            <!-- Button to navigate to allergen management -->
+            <a href="{{ url_for('manage_allergens') }}" class="btn-primary">Manage Allergens</a>
+        </main>
+    </div>
+</body>
+</html>

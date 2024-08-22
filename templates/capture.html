@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllergyGuard - Capture</title>
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Main container for the page content -->
+    <div class="container">
+        <!-- Header section with branding -->
+        <header>
+            <h1>AllergyGuard</h1>
+            <p>Scan Smart. Stay Safe.</p>
+        </header>
+
+        <!-- Section for capturing images using the camera -->
+        <section>
+            <h2>Capture an image using your camera:</h2>
+            <!-- Camera feed container -->
+            <div id="camera-container" style="display: flex; justify-content: center;">
+                <video id="video" width="640" height="480" autoplay></video>
+            </div>
+            <!-- Button to trigger image capture -->
+            <button id="snap" class="btn-primary">Capture Image</button>
+            <!-- Canvas to display the captured image -->
+            <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+            <div id="preview-container">
+                <img id="image-preview" src="" alt="Captured Image Preview" style="display: none;">
+            </div>
+            <!-- Form to submit captured image data -->
+            <form id="capture-form" method="post" action="/process_capture" enctype="multipart/form-data">
+                <input type="hidden" name="image_data" id="image_data">
+                <button type="submit" id="submit-button" class="btn-secondary" style="display: none;">Submit Image</button>
+                <button type="button" id="retake-button" class="btn-primary" style="display: none;" onclick="retakeImage()">Retake Image</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- JavaScript for handling the camera capture logic -->
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById('snap');
+        const context = canvas.getContext('2d');
+        const imageDataInput = document.getElementById('image_data');
+        const imagePreview = document.getElementById('image-preview');
+        const submitButton = document.getElementById('submit-button');
+        const retakeButton = document.getElementById('retake-button');
+
+        // Access the user's camera and start streaming video to the video element
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: " + err);
+            });
+
+        // Capture the current frame from the video feed when the snap button is clicked
+        snap.addEventListener('click', () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageDataURL = canvas.toDataURL('image/png');
+            imageDataInput.value = imageDataURL;
+
+            // Hide video feed and display captured image
+            video.style.display = 'none';
+            imagePreview.src = imageDataURL;
+            imagePreview.style.display = 'block';
+
+            // Show submit and retake buttons
+            submitButton.style.display = 'block';
+            retakeButton.style.display = 'block';
+
+            // Hide the snap button
+            snap.style.display = 'none';
+        });
+
+        // Reset the view to allow the user to retake the image
+        function retakeImage() {
+            video.style.display = 'block';
+            imagePreview.style.display = 'none';
+            submitButton.style.display = 'none';
+            retakeButton.style.display = 'none';
+            snap.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
